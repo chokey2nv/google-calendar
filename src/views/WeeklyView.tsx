@@ -3,7 +3,7 @@ import styled, { useTheme } from 'styled-components';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { daysOfWeek, formatHour, hours, NavContainer, StyledDateTitle, toISODate, type ICalendarEvent } from '@/utils';
-import { WeekCell } from './WeekCell';
+import { WeekCell, type WeekCellProps } from './WeekCell';
 import { useIsMobile } from '@/hooks/isMobile';
 import { IconButton } from '@/components/base/buttons';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
@@ -61,9 +61,10 @@ const TimeLabel = styled.div`
 export type WeeklyCalendarProps = {
   events: ICalendarEvent[];
   onEventDrop: (id: string, newDate: Date) => Promise<void>;
+  eventCardProps: WeekCellProps["eventCardProps"]
 };
 
-export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ events, onEventDrop }) => {
+export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ events, onEventDrop, eventCardProps }) => {
     const {startOfWeek, setStartOfWeek} = useCalendarStore();
     const isMobile = useIsMobile();
     const theme = useTheme();
@@ -141,6 +142,7 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ events, onEventD
                             onDropEvent(id, newDate) {
                                 onEventDrop(id, newDate);
                             },
+                            eventCardProps
                         }}
                     />);
                 })}

@@ -1,13 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useDrop } from 'react-dnd';
-import { DraggableEvent } from './DraggableEvent';
+import { DraggableEvent, type DraggableEventProps, type IParentPushInProps } from './DraggableEvent';
 import type { ICalendarEvent } from '@/utils';
 
-type Props = {
+export interface DayCellProps {
   hour: number;
   date: Date;
   events: ICalendarEvent[];
+  eventCardProps: IParentPushInProps
   onDropEvent?: (id: string, newDate: Date) => void;
 };
 
@@ -23,7 +24,9 @@ const CellWrapper = styled.div`
   min-height: 50px;
 `;
 
-export const DayCell: React.FC<Props> = ({ hour, date, events, onDropEvent }) => {
+export const DayCell: React.FC<DayCellProps> = ({ 
+  hour, date, events, onDropEvent, eventCardProps,
+ }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [, drop] = useDrop(() => ({
@@ -44,7 +47,7 @@ export const DayCell: React.FC<Props> = ({ hour, date, events, onDropEvent }) =>
   return (
     <CellWrapper ref={ref}>
       {events.map((event) => (
-        <DraggableEvent key={event.id} event={event} />
+        <DraggableEvent key={event.id} event={event} {...eventCardProps}/>
       ))}
     </CellWrapper>
   );

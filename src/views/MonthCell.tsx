@@ -3,7 +3,7 @@ import React from 'react';
 import styled, { useTheme } from 'styled-components';
 import { useDrop } from 'react-dnd';
 import type { ICalendarEvent } from '@/utils';
-import { DraggableEvent } from './DraggableEvent';
+import { DraggableEvent, type IParentPushInProps } from './DraggableEvent';
 
 const CellWrapper = styled.div`
     border: 1px solid ${({ theme }) => theme.borderLine};
@@ -38,20 +38,21 @@ const EventContainer = styled.div`
 `
 
 
-type Props = {
+export interface CalendarCellProps {
   day: number;
   date: Date;
   events: ICalendarEvent[];
   isToday: boolean;
   onDropEvent?: (eventId: string, newDate: Date) => void;
+  eventCardProps: IParentPushInProps
 };
 
-export const CalendarCell: React.FC<Props> = ({
+export const CalendarCell: React.FC<CalendarCellProps> = ({
   day,
   date,
   events,
   isToday,
-  onDropEvent,
+  onDropEvent, eventCardProps,
 }) => {
     const theme = useTheme();
     const ref = React.useRef<HTMLDivElement>(null);
@@ -78,7 +79,7 @@ export const CalendarCell: React.FC<Props> = ({
             <DayNumber isToday={isToday}>{day}</DayNumber>
             {events.length > 0 && <EventContainer>
                 {events.map((event) => (
-                    <DraggableEvent key={event.id} event={event} />
+                    <DraggableEvent key={event.id} event={event} {...eventCardProps} />
                 ))}
             </EventContainer>}
         </CellWrapper>

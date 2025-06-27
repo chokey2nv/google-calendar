@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import { DayCell } from './DayCell';
+import { DayCell, type DayCellProps } from './DayCell';
 import { NavContainer, StyledDateTitle, type ICalendarEvent } from '@/utils';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -28,11 +28,11 @@ const TimeLabel = styled.div`
 
 const hours = Array.from({ length: 24 }, (_, i) => i); // 8AM–8PM
 
-type Props = {
+export interface DayViewProps extends Pick<DayCellProps, "eventCardProps"> {
   events: ICalendarEvent[];
   onEventDrop?: (id: string, newDate: Date) => void;
 };
-export const DayView: React.FC<Props> = ({ events, onEventDrop }) => {
+export const DayView: React.FC<DayViewProps> = ({ events, onEventDrop, eventCardProps }) => {
   const { currentDate, setCurrentDate } = useCalendarStore();
   const isMobile = useIsMobile();
 
@@ -71,6 +71,7 @@ export const DayView: React.FC<Props> = ({ events, onEventDrop }) => {
               date={currentDate}
               events={getEventsForHour(hour)}
               onDropEvent={onEventDrop}
+              eventCardProps={eventCardProps}
             />
           </HourRow>
         ))}

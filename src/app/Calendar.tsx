@@ -9,6 +9,18 @@ export default function CalendarPage(){
     return (
         <CalendarUI 
             {...{
+                eventCardProps: {
+                    async onDeleteEvent(eventId) {
+                        
+                        return true;
+                    },
+                    onEditEvent(eventId, event) {
+                        
+                    },
+                    onResize(id, newStart, newEnd) {
+                        
+                    },
+                },
                 async onGetEvents() {
                     const events = await eventHook.getEvents();
                     if(events){

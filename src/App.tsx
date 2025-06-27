@@ -8,6 +8,7 @@ import 'react-calendar/dist/Calendar.css';
 import { ConfigProvider } from 'antd';
 import { NewEventForm } from './components/forms';
 import { useAppSettingStore } from './store';
+import { EventDetailModal } from './components';
 
 function App() {
   const { theme : themeType } = useAppSettingStore()
@@ -26,6 +27,7 @@ function App() {
           </AppLayout>
         </NotificationProvider>
         <NewEventForm/>
+        <EventDetailModal/>
       </ThemeProvider>
     </ConfigProvider>
   )

@@ -46,21 +46,25 @@ const CustomModal = styled(Modal)`
     }
 `
 
-export interface INewEventForm extends Omit<ICalendarEvent, "date"> {
+export interface INewEventForm extends Omit<ICalendarEvent, "date"|"endDate"> {
     hour: string;
     minute: string
     date: dayjs.Dayjs
+    endDate: dayjs.Dayjs
+    endHour: string
+    endMinute: string
 }
 export const NewEventForm = () => {
     const { isModalOpen, onCancel, onSubmit } = useNewEventStore()
     const formRef = useRef<FormInstance<INewEventForm>>(null)
     const theme = useTheme();
     const onFinish = (form: INewEventForm) => {
-        const { date, hour, minute, title, description } = form;
+        const { date, hour, minute, title, description, endDate, endHour, endMinute } = form;
         const event: Partial<ICalendarEvent> = {
             title,
             description,
-            date: toFullDateTime(date, hour, minute).toISOString()
+            date: toFullDateTime(date, hour, minute).toISOString(),
+            endDate: toFullDateTime(endDate || date, endHour, endMinute).toISOString()
         }
         onSubmit?.(event).finally(() => {
             onCancel?.()
@@ -177,7 +181,69 @@ export const NewEventForm = () => {
                                 }
                             }
                         ]
-                    }
+                    },
+                    {
+                        fieldType: FORM_FIELD_TYPES.FIELDS,
+                        itemProps: {
+                            name: "time",
+                        },
+                        fieldProps: [
+                            {
+                                fieldType: FORM_FIELD_TYPES.DATE,                        
+                                itemProps: {
+                                    name: "endDate",  
+                                    label: "End date"
+                                },
+                                fieldProps: {
+                                    placeholder: "End date",
+                                    size: "large",
+                                },
+                                colProps: {
+                                    span: 12,
+                                }
+                            },
+                            {
+                                fieldType: FORM_FIELD_TYPES.SELECT,
+                                itemProps: {
+                                    name: "endHour",
+                                    label: "End hour",
+                                },                                
+                                fieldProps: {
+                                    options: Array.from({ length: 24 }, (_, i) => ({ value: i.toString(), label: String(i)})),
+                                    field: {
+                                        size: "large",
+                                        placeholder: "Hour",
+                                        style: {
+                                            // minWidth: 100,
+                                        }
+                                    }
+                                } as SelectField,
+                                colProps: {
+                                    span: 6,
+                                }
+                            },
+                            {
+                                fieldType: FORM_FIELD_TYPES.SELECT,
+                                itemProps: {
+                                    name: "endMinute",
+                                    label: "End minute"
+                                },                                
+                                fieldProps: {
+                                    options: Array.from({ length: 60 }, (_, i) => ({ value: i.toString(), label: String(i)})),
+                                    field: {
+                                        size: "large",
+                                        placeholder: "Minute",
+                                        style: {
+                                            // minWidth: 100,
+                                        }
+                                    }
+                                } as SelectField,
+                                colProps: {
+                                    span: 6,
+                                }
+                            }
+                        ]
+                    },
                 ]
             }}/>
             <BtnContainer>

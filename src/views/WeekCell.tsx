@@ -1,15 +1,16 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useDrop } from 'react-dnd';
-import { DraggableEvent } from './DraggableEvent';
+import { DraggableEvent, type IParentPushInProps } from './DraggableEvent';
 import type { ICalendarEvent } from '@/utils';
 
-type Props = {
+export interface WeekCellProps {
   dayIndex: number;
   hour: number;
   date: Date;
   events: ICalendarEvent[];
   onDropEvent?: (id: string, newDate: Date) => void;
+  eventCardProps: IParentPushInProps
 };
 
 const CellWrapper = styled.div`
@@ -21,7 +22,7 @@ const CellWrapper = styled.div`
   overflow: hidden;
 `;
 
-export const WeekCell: React.FC<Props> = ({ dayIndex, hour, date, events, onDropEvent }) => {
+export const WeekCell: React.FC<WeekCellProps> = ({ eventCardProps, hour, date, events, onDropEvent }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [, drop] = useDrop(() => ({
@@ -42,7 +43,7 @@ export const WeekCell: React.FC<Props> = ({ dayIndex, hour, date, events, onDrop
   return (
     <CellWrapper ref={ref}>
       {events.map((event) => (
-        <DraggableEvent key={event.id} event={event} />
+        <DraggableEvent key={event.id} event={event} {...eventCardProps}/>
       ))}
     </CellWrapper>
   );

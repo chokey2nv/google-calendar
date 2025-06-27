@@ -3,11 +3,10 @@ import Calendar from "react-calendar";
 import { useAppSettingStore } from "@/store";
 import { MonthlyCalendar } from "./MonthlyCalendar";
 import { WeeklyCalendar, type WeeklyCalendarProps } from "./WeeklyView";
-import { useEffect, useState, type FC } from "react";
-import { DayView } from "./DayView";
+import { useEffect, type FC } from "react";
+import { DayView, type DayViewProps } from "./DayView";
 import { useIsMobile } from "@/hooks/isMobile";
 import { MobileViewBar } from "@/components/base/layout/mobileBar";
-import type { ICalendarEvent } from "@/utils";
 import { useEventStore } from "@/store/events";
 
 export const Root = styled.div`
@@ -45,17 +44,16 @@ const StyledCalendar = styled(Calendar)`
         color: ${props => props.theme.text} !important;
     }
 `
-export interface CalendarUIProps extends  Pick<WeeklyCalendarProps, "onEventDrop"> {
+export interface CalendarUIProps extends  Pick<WeeklyCalendarProps, "onEventDrop" >, Pick<DayViewProps, "eventCardProps"> {
     onGetEvents: () => Promise<void>;
 }
 export const CalendarUI:FC<CalendarUIProps> = ({
-    onEventDrop: parentOnEventDrop, onGetEvents
+    onEventDrop: parentOnEventDrop, onGetEvents, eventCardProps
 }) => {
     const { view } = useAppSettingStore()
     const { events  } = useEventStore()
     const isMobile = useIsMobile();
 
-    console.log({ events })
     useEffect(() => {
         onGetEvents()
     }, [])
@@ -65,8 +63,8 @@ export const CalendarUI:FC<CalendarUIProps> = ({
     return <>
         {isMobile && <MobileViewBar/>}
         {view === "day" ? 
-            <DayView  {...{ events, onEventDrop, date: new Date() }}/> : 
-            (view === "week" ? <WeeklyCalendar {...{ events, onEventDrop}}/> : 
-            <MonthlyCalendar {...{ events, onEventDrop }} />)}
+            <DayView  {...{ events, onEventDrop, date: new Date(), eventCardProps }}/> : 
+            (view === "week" ? <WeeklyCalendar {...{ events, onEventDrop, eventCardProps}}/> : 
+            <MonthlyCalendar {...{ events, onEventDrop, eventCardProps }} />)}
     </>
 };

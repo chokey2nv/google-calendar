@@ -4,10 +4,11 @@ import styled from 'styled-components';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { CalendarCell } from './MonthCell';
+import { CalendarCell, type CalendarCellProps } from './MonthCell';
 import { daysOfWeek, StyledDateTitle, type ICalendarEvent } from '@/utils';
 import { useIsMobile } from '@/hooks/isMobile';
 import { useCalendarStore } from '@/store';
+import type { IParentPushInProps } from './DraggableEvent';
 
 const Root = styled.div`
   width: auto;
@@ -50,9 +51,10 @@ const getFirstDayOfMonth = (month: number, year: number) =>
 type Props = {
   events?: ICalendarEvent[];
   onEventDrop?: (eventId: string, newDate: Date, index?: number) => void;
+  eventCardProps: CalendarCellProps["eventCardProps"]
 };
 
-export const MonthlyCalendar: React.FC<Props> = ({ events, onEventDrop }) => {
+export const MonthlyCalendar: React.FC<Props> = ({ events, onEventDrop, eventCardProps }) => {
   const { currentDate, setCurrentDate } = useCalendarStore()
   const isMobile = useIsMobile();
 
@@ -98,6 +100,7 @@ export const MonthlyCalendar: React.FC<Props> = ({ events, onEventDrop }) => {
             events={getEventsForDate(cellDate) || []}
             isToday={isToday}
             onDropEvent={onEventDrop}
+            eventCardProps={eventCardProps}
           />
         );
       }

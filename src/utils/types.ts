@@ -3,6 +3,7 @@ export interface ICalendarEvent {
     title: string;
     description?: string;
     date: string;
+    endDate: string;
     color?: string;
 }
 export interface ApiResponse<T = undefined> {
