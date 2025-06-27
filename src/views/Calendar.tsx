@@ -4,6 +4,7 @@ import { useAppSettingStore } from "@/store";
 import { MonthlyCalendar } from "./MonthlyCalendar";
 import { WeeklyCalendar, type WeeklyCalendarProps } from "./WeeklyCalendar";
 import type { FC } from "react";
+import { DayView } from "./DayView";
 
 export const Root = styled.div`
     width: 100%;
@@ -47,8 +48,11 @@ export const CalendarUI:FC<CalendarUIProps> = ({
     onEventDrop, events,
 }) => {
     const { view } = useAppSettingStore()
-    if(view === "month") {
-        return <MonthlyCalendar  {...{ events, onEventDrop }}/>
+    if(view === "day") {
+        return <DayView  {...{ events, onEventDrop, date: new Date() }}/>
     }
-    return <WeeklyCalendar {...{ events, onEventDrop}}/>
+    if(view === "week"){
+        return <WeeklyCalendar {...{ events, onEventDrop}}/>
+    }
+    return <MonthlyCalendar  {...{ events, onEventDrop }}/>
 };

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { CalendarCell } from './CalendarCell';
+import { CalendarCell } from './MonthCell';
 import type { ICalendarEvent } from '@/utils';
 
 const Root = styled.div`
