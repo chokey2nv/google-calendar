@@ -1,13 +1,13 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import styled from 'styled-components';
-import { DndProvider, useDrop } from 'react-dnd';
+import React, { useCallback, useMemo } from 'react';
+import styled, { useTheme } from 'styled-components';
+import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DraggableEvent } from './DraggableEvent';
-import type { ICalendarEvent } from '@/utils';
+import { daysOfWeek, formatHour, hours, NavContainer, StyledDateTitle, toISODate, type ICalendarEvent } from '@/utils';
 import { WeekCell } from './WeekCell';
-
-const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const hours = Array.from({ length: 24 }, (_, i) => i); // 8AM to 8PM
+import { useIsMobile } from '@/hooks/isMobile';
+import { IconButton } from '@/components/base/buttons';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { useCalendarStore } from '@/store';
 
 const Wrapper = styled.div`
   display: flex;
@@ -18,14 +18,6 @@ const Header = styled.div`
   display: grid;
   grid-template-columns: 60px repeat(7, 1fr);
   font-weight: bold;
-`;
-
-const NavButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  padding: 0.5rem;
-  cursor: pointer;
 `;
 
 const DayHeader = styled.div`
@@ -65,13 +57,16 @@ const TimeLabel = styled.div`
     color: ${({ theme }) => theme.text};
 `;
 
+
 export type WeeklyCalendarProps = {
   events: ICalendarEvent[];
   onEventDrop: (id: string, newDate: Date) => void;
 };
 
 export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ events, onEventDrop }) => {
-    const [startOfWeek, setStartOfWeek] = useState(getStartOfWeek(new Date()));
+    const {startOfWeek, setStartOfWeek} = useCalendarStore();
+    const isMobile = useIsMobile();
+    const theme = useTheme();
 
     const nextWeek = useCallback(() => {
         const next = new Date(startOfWeek);
@@ -84,7 +79,6 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ events, onEventD
         prev.setDate(startOfWeek.getDate() - 7);
         setStartOfWeek(prev);
     }, [startOfWeek]);
-    const [today] = useState(startOfWeek || getStartOfWeek(new Date()));
 
     const getEventsForSlot = (date: Date, hour: number) => {
     const dateKey = toISODate(date);
@@ -108,9 +102,15 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ events, onEventD
   return (
     <DndProvider backend={HTML5Backend}>
       <Wrapper>
-        {/* <NavButton onClick={prevWeek}>&larr;</NavButton>
-          <h2>{dateRangeText}</h2>
-          <NavButton onClick={nextWeek}>&rarr;</NavButton> */}
+        {isMobile && <NavContainer>
+           <IconButton onClick={prevWeek}>
+               <FiChevronLeft size={24} color={theme.text}/>
+            </IconButton>
+            <StyledDateTitle>{dateRangeText}</StyledDateTitle>
+            <IconButton onClick={nextWeek}>
+              <FiChevronRight size={24} color={theme.text}/>
+            </IconButton>
+        </NavContainer>}
         <Header>
           <TimeLabel />
           {daysOfWeek.map((day, i) => {
@@ -151,18 +151,4 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ events, onEventD
   );
 };
 
-function getStartOfWeek(date: Date): Date {
-  const day = date.getDay();
-  const diff = date.getDate() - day; // back to Sunday
-  return new Date(date.setDate(diff));
-}
 
-function formatHour(hour: number) {
-  const suffix = hour >= 12 ? 'PM' : 'AM';
-  const hour12 = hour > 12 ? hour - 12 : hour;
-  return `${hour12} ${suffix}`;
-}
-
-function toISODate(date: Date): string {
-  return date.toISOString().split('T')[0];
-}

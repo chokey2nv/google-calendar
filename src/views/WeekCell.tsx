@@ -17,6 +17,8 @@ const CellWrapper = styled.div`
   padding: 0.25rem;
   position: relative;
   min-height: 60px;
+  height: 60px;
+  overflow: hidden;
 `;
 
 export const WeekCell: React.FC<Props> = ({ dayIndex, hour, date, events, onDropEvent }) => {

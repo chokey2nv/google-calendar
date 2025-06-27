@@ -20,3 +20,8 @@ export const Button = styled.button`
     border-color: #747775;
   }
 `;
+export const IconButton = styled(Button)`
+  border: none;
+  background-color: transparent;
+  padding: 5px;
+`

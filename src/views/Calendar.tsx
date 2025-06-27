@@ -2,9 +2,11 @@ import styled from "styled-components";
 import Calendar from "react-calendar";
 import { useAppSettingStore } from "@/store";
 import { MonthlyCalendar } from "./MonthlyCalendar";
-import { WeeklyCalendar, type WeeklyCalendarProps } from "./WeeklyCalendar";
+import { WeeklyCalendar, type WeeklyCalendarProps } from "./WeeklyView";
 import type { FC } from "react";
 import { DayView } from "./DayView";
+import { useIsMobile } from "@/hooks/isMobile";
+import { MobileViewBar } from "@/components/base/layout/mobileBar";
 
 export const Root = styled.div`
     width: 100%;
@@ -48,11 +50,12 @@ export const CalendarUI:FC<CalendarUIProps> = ({
     onEventDrop, events,
 }) => {
     const { view } = useAppSettingStore()
-    if(view === "day") {
-        return <DayView  {...{ events, onEventDrop, date: new Date() }}/>
-    }
-    if(view === "week"){
-        return <WeeklyCalendar {...{ events, onEventDrop}}/>
-    }
-    return <MonthlyCalendar  {...{ events, onEventDrop }}/>
+    const isMobile = useIsMobile();
+    return <>
+        {isMobile && <MobileViewBar/>}
+        {view === "day" ? 
+            <DayView  {...{ events, onEventDrop, date: new Date() }}/> : 
+            (view === "week" ? <WeeklyCalendar {...{ events, onEventDrop}}/> : 
+            <MonthlyCalendar {...{ events, onEventDrop }} />)}
+    </>
 };

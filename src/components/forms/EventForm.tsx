@@ -62,7 +62,6 @@ export const NewEventForm = () => {
             description,
             date: toFullDateTime(date, hour, minute).toISOString()
         }
-        console.log({event, onSubmit})
         onSubmit?.(event).finally(() => {
             onCancel?.()
             formRef.current?.resetFields();

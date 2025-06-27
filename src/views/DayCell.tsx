@@ -12,10 +12,12 @@ type Props = {
 };
 
 const CellWrapper = styled.div`
-  border-top: 1px solid #ddd;
-  height: 60px;
+  border-top: 1px solid #333537;
   padding: 0.5rem;
   position: relative;
+  width: 100%;
+  display: flex;
+  gap: 10px;
 `;
 
 export const DayCell: React.FC<Props> = ({ hour, date, events, onDropEvent }) => {

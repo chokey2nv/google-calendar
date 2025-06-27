@@ -1,11 +1,13 @@
 // src/components/CalendarUI.tsx
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { CalendarCell } from './MonthCell';
-import type { ICalendarEvent } from '@/utils';
+import { daysOfWeek, StyledDateTitle, type ICalendarEvent } from '@/utils';
+import { useIsMobile } from '@/hooks/isMobile';
+import { useCalendarStore } from '@/store';
 
 const Root = styled.div`
   width: auto;
@@ -50,7 +52,8 @@ type Props = {
 };
 
 export const MonthlyCalendar: React.FC<Props> = ({ events = [], onEventDrop }) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const { currentDate, setCurrentDate } = useCalendarStore()
+  const isMobile = useIsMobile();
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -58,17 +61,18 @@ export const MonthlyCalendar: React.FC<Props> = ({ events = [], onEventDrop }) =
   const startDay = React.useMemo(() => getFirstDayOfMonth(month, year), [currentDate]);
   const today = new Date();
 
-  const goToPrevMonth = () => setCurrentDate(new Date(year, month - 1));
-  const goToNextMonth = () => setCurrentDate(new Date(year, month + 1));
-
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const goToPrevMonth = useCallback(() => setCurrentDate(new Date(year, month - 1)), [currentDate]);
+  const goToNextMonth = useCallback(() => setCurrentDate(new Date(year, month + 1)), [currentDate]);
 
   const getEventsForDate = (date: Date) => {
-    const key = date.toISOString().split('T')[0];
-    return events.filter((e) => e.date === key);
+    const key = date.toLocaleDateString('sv-SE'); // "2025-06-25"
+    return events.filter((e) => {
+      const eventDateStr = new Date(e.date).toLocaleDateString('sv-SE');
+      return eventDateStr === key;
+    });
   };
 
-  const generateCells = () => {
+  const generateCells = useCallback(() => {
     const cells = [];
     const total = startDay + daysInMonth;
 
@@ -99,26 +103,26 @@ export const MonthlyCalendar: React.FC<Props> = ({ events = [], onEventDrop }) =
     }
 
     return cells;
-  };
+  }, [JSON.stringify(currentDate)]);
 
   return (
     <DndProvider backend={HTML5Backend}>
       <Root>
-        {/* <Header>
+        {isMobile && <Header>
           <NavButton onClick={goToPrevMonth}>
             <FiChevronLeft />
           </NavButton>
-          <h2>
+          <StyledDateTitle>
             {currentDate.toLocaleString('default', { month: 'long' })}{' '}
             {year}
-          </h2>
+          </StyledDateTitle>
           <NavButton onClick={goToNextMonth}>
             <FiChevronRight />
           </NavButton>
-        </Header> */}
+        </Header> }
 
         <Grid>
-          {dayNames.map((day) => (
+          {daysOfWeek.map((day) => (
             <DayName key={day}>{day}</DayName>
           ))}
           {generateCells()}
