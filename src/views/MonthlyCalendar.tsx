@@ -38,6 +38,7 @@ const DayName = styled.div`
   font-weight: bold;
   font-size: 11px;
   text-transform: uppercase;
+  color: ${props => props.theme.text};
 `;
 
 const getDaysInMonth = (month: number, year: number) =>
@@ -51,7 +52,7 @@ type Props = {
   onEventDrop?: (eventId: string, newDate: Date, index?: number) => void;
 };
 
-export const MonthlyCalendar: React.FC<Props> = ({ events = [], onEventDrop }) => {
+export const MonthlyCalendar: React.FC<Props> = ({ events, onEventDrop }) => {
   const { currentDate, setCurrentDate } = useCalendarStore()
   const isMobile = useIsMobile();
 
@@ -64,13 +65,13 @@ export const MonthlyCalendar: React.FC<Props> = ({ events = [], onEventDrop }) =
   const goToPrevMonth = useCallback(() => setCurrentDate(new Date(year, month - 1)), [currentDate]);
   const goToNextMonth = useCallback(() => setCurrentDate(new Date(year, month + 1)), [currentDate]);
 
-  const getEventsForDate = (date: Date) => {
+  const getEventsForDate = useCallback((date: Date) => {
     const key = date.toLocaleDateString('sv-SE'); // "2025-06-25"
-    return events.filter((e) => {
+    return events?.filter((e) => {
       const eventDateStr = new Date(e.date).toLocaleDateString('sv-SE');
       return eventDateStr === key;
     });
-  };
+  }, [JSON.stringify(events)]);
 
   const generateCells = useCallback(() => {
     const cells = [];
@@ -94,7 +95,7 @@ export const MonthlyCalendar: React.FC<Props> = ({ events = [], onEventDrop }) =
             key={key}
             day={day}
             date={cellDate}
-            events={getEventsForDate(cellDate)}
+            events={getEventsForDate(cellDate) || []}
             isToday={isToday}
             onDropEvent={onEventDrop}
           />
@@ -103,7 +104,7 @@ export const MonthlyCalendar: React.FC<Props> = ({ events = [], onEventDrop }) =
     }
 
     return cells;
-  }, [JSON.stringify(currentDate)]);
+  }, [JSON.stringify(currentDate), JSON.stringify(events)]);
 
   return (
     <DndProvider backend={HTML5Backend}>

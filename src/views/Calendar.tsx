@@ -3,10 +3,12 @@ import Calendar from "react-calendar";
 import { useAppSettingStore } from "@/store";
 import { MonthlyCalendar } from "./MonthlyCalendar";
 import { WeeklyCalendar, type WeeklyCalendarProps } from "./WeeklyView";
-import type { FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import { DayView } from "./DayView";
 import { useIsMobile } from "@/hooks/isMobile";
 import { MobileViewBar } from "@/components/base/layout/mobileBar";
+import type { ICalendarEvent } from "@/utils";
+import { useEventStore } from "@/store/events";
 
 export const Root = styled.div`
     width: 100%;
@@ -29,7 +31,7 @@ const StyledCalendar = styled(Calendar)`
     }
     .react-calendar__tile {
         height: calc(100vh / 7) !important;
-        border: solid 1px #333537 !important;
+        border: solid 1px ${({ theme }) => theme.borderLine} !important;
     }
     .react-calendar__tile:enabled:hover {
         background-color: transparent !important;
@@ -43,14 +45,23 @@ const StyledCalendar = styled(Calendar)`
         color: ${props => props.theme.text} !important;
     }
 `
-export interface CalendarUIProps extends  WeeklyCalendarProps {
-
+export interface CalendarUIProps extends  Pick<WeeklyCalendarProps, "onEventDrop"> {
+    onGetEvents: () => Promise<void>;
 }
 export const CalendarUI:FC<CalendarUIProps> = ({
-    onEventDrop, events,
+    onEventDrop: parentOnEventDrop, onGetEvents
 }) => {
     const { view } = useAppSettingStore()
+    const { events  } = useEventStore()
     const isMobile = useIsMobile();
+
+    console.log({ events })
+    useEffect(() => {
+        onGetEvents()
+    }, [])
+    const onEventDrop = async (eventId: string, newDate: Date) => {
+        await parentOnEventDrop(eventId, newDate)
+    }
     return <>
         {isMobile && <MobileViewBar/>}
         {view === "day" ? 

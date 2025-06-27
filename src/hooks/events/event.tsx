@@ -30,6 +30,22 @@ export const useEventHook = () => {
     };
 
     // declare the functions here (expected to handle any business logic which is in sync with the back-end interaction)
+    const getEvents = async ():Promise<ApiResponse<ICalendarEvent[]>> => {
+        try {
+            const { data, err } = await eventService.getEvents()
+            if(err){
+                throw err;
+            }
+            return {
+                success: true,
+                data: data?.events
+            }
+        }catch(e){
+            return {
+                err: (e as Error)
+            }
+        }
+    }
     const createEvent = async (input: ICreateEventRequest):Promise<ApiResponse<ICalendarEvent>> => {
         try {
             const { data, err } = await eventService.createEvent(input)
@@ -96,6 +112,7 @@ export const useEventHook = () => {
     }
 
     return {
+        getEvents: () => handleRequest(getEvents, null),
         createEvent: (input: ICreateEventRequest) => handleRequest(createEvent, input),
         updateEvent: (input: IUpdateEventRequest) => handleRequest(updateEvent, input),
         deleteEvent: (input: IDeleteEventRequest) => handleRequest(deleteEvent, input),

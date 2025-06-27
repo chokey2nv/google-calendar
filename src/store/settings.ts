@@ -1,4 +1,4 @@
-import type { ICalendarEvent, ISettingView, ITheme } from "@/utils";
+import type { ISettingView, ITheme } from "@/utils";
 import { create } from "zustand";
 
 interface AppSettingStore {

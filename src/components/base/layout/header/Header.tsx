@@ -2,7 +2,7 @@ import styled, { useTheme } from "styled-components"
 import { FiAlignJustify, FiSearch } from "react-icons/fi";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { BsQuestionCircle } from "react-icons/bs";
-import { Button, IconButton, TodayBtn, ViewSelectorBtn } from "../../buttons";
+import { IconButton, TodayBtn, ViewSelectorBtn } from "../../buttons";
 import { useCallback, useMemo, type FC } from "react";
 import { useAppSettingStore, useCalendarStore } from "@/store";
 import { CiDark, CiLight } from "react-icons/ci";

@@ -5,6 +5,8 @@ import { Sidebar, type SidebarProps } from "./sidebar";
 import { AnimatePresence, motion } from "framer-motion";
 import { Drawer } from "antd";
 import { useIsMobile } from "@/hooks/isMobile";
+import { useEventHook } from "@/hooks/events/event";
+import { useEventStore } from "@/store/events";
 
 const Root = styled.div`
     background-color: ${props => props.theme.background};
@@ -32,13 +34,28 @@ const ViewLayout = styled(motion.div)<{ isMobile: boolean }>`
   background-color: ${props => props.theme.primary};
   overflow-y: auto;
   transition: width 0.3s ease;
+  padding: 5px;
 `;
-export interface AppLayoutProps extends Pick<SidebarProps, "onCreateEvent"> {
+export interface AppLayoutProps {
     children: ReactNode;
 }
-export const AppLayout:FC<AppLayoutProps> = ({ children, onCreateEvent }) => {
+export const AppLayout:FC<AppLayoutProps> = ({ children }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(true)
     const  isMobile  = useIsMobile()
+    const eventHook = useEventHook();
+    const { setEvents } = useEventStore()
+
+    const onCreateEvent: SidebarProps["onCreateEvent"] = async (event) => {
+        const result = await eventHook.createEvent({event})
+        if(result){
+           const events = await eventHook.getEvents()
+           if(events && events.length > 0){
+               setEvents(events);
+           }
+        }
+        console.log({ result })
+        return Boolean(result)
+    }
     return <Root>
         <Header {...{ 
             onToggleMenu() {

@@ -23,7 +23,6 @@ const TimeLabel = styled.div`
   text-align: right;
   font-size: 0.75rem;
   padding: 0.5rem;
-  border-right: 1px solid #333537;
   color: #888;
 `;
 
@@ -54,7 +53,7 @@ export const DayView: React.FC<Props> = ({ events, onEventDrop }) => {
               eventTime.getHours() === hour
           );
       });
-  }, [JSON.stringify(currentDate)]);
+  }, [JSON.stringify(currentDate), JSON.stringify(events)]);
 
   return (
     <DndProvider backend={HTML5Backend}>

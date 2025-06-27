@@ -1,21 +1,27 @@
+import { useEventHook } from "@/hooks/events/event";
 import { CalendarUI } from "../views";
+import { useEventStore } from "@/store/events";
 
 
 export default function CalendarPage(){
+    const eventHook = useEventHook();
+    const { setEvents } = useEventStore();
     return (
         <CalendarUI 
-            events={[
-                { id: '1', date: '2025-06-25', title: 'Doctor Visit', color: '#e3fcef' },
-                { id: '2', date: '2025-06-25', title: 'Doctor Visit', color: '#e3fcef' },
-                { id: '3', date: '2025-06-25', title: 'Doctor Visit', color: '#e3fcef' },
-                { id: '4', date: '2025-06-25', title: 'Doctor Visit', color: '#e3fcef' },
-                { id: '5', date: '2025-06-25', title: 'Doctor Visit', color: '#e3fcef' },
-                { id: '6', date: '2025-06-26', title: 'Project Sync', color: '#dbeafe' },
-                { id: '7', date: '2025-06-27', title: 'Project Sync', color: '#dbeafe' },
-            ]}
             {...{
-                onEventDrop(eventId, newDate) {
-                    console.log('Moved event', eventId, 'to', newDate.toDateString());                    
+                async onGetEvents() {
+                    const events = await eventHook.getEvents();
+                    if(events){
+                        setEvents(events)
+                    }
+                },
+                async onEventDrop(eventId, newDate) {
+                    console.log('Moved event', eventId, 'to', newDate.toDateString());     
+                    await eventHook.updateEvent({eventId, event: {date: newDate.toISOString()}}) 
+                    const events = await eventHook.getEvents() 
+                    if(events){
+                        setEvents(events)
+                    }  
                 },
             }}
         />

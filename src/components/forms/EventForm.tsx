@@ -1,6 +1,6 @@
 import { useNewEventStore } from "@/store"
-import { type FormInstance, Modal, type SelectProps } from "antd"
-import { FORM_FIELD_TYPES, FormAdapter, type IFormItems, type SelectField } from "./FormAdapter"
+import { type FormInstance, Modal } from "antd"
+import { FORM_FIELD_TYPES, FormAdapter, type SelectField } from "./FormAdapter"
 import { useRef } from "react"
 import { type ICalendarEvent } from "@/utils"
 import styled, { useTheme } from "styled-components"

@@ -1,4 +1,3 @@
-// stores/useCalendarStore.ts
 import { getStartOfWeek } from '@/utils';
 import { create } from 'zustand';
 

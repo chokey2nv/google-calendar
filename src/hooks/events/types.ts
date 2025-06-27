@@ -22,3 +22,6 @@ export interface IDeleteEventResponse {
 export interface IResetEventDataResponse {
     success: boolean;
 }
+export interface IGetEventsResponse {
+    events: ICalendarEvent[];
+}

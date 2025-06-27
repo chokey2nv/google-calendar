@@ -60,7 +60,7 @@ const TimeLabel = styled.div`
 
 export type WeeklyCalendarProps = {
   events: ICalendarEvent[];
-  onEventDrop: (id: string, newDate: Date) => void;
+  onEventDrop: (id: string, newDate: Date) => Promise<void>;
 };
 
 export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ events, onEventDrop }) => {
@@ -80,16 +80,16 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({ events, onEventD
         setStartOfWeek(prev);
     }, [startOfWeek]);
 
-    const getEventsForSlot = (date: Date, hour: number) => {
-    const dateKey = toISODate(date);
-    return events.filter((e) => {
-        const eventTime = new Date(e.date || `${e.date}T08:00`);
-        return (
-            e.date === dateKey &&
-            eventTime.getHours() === hour
-        );
+    const getEventsForSlot = useCallback((date: Date, hour: number) => {
+        const dateKey = toISODate(date);
+        return events.filter((e) => {
+            const eventTime = new Date(e.date || `${e.date}T08:00`);
+            return (
+                toISODate(eventTime) === dateKey &&
+                eventTime.getHours() === hour
+            );
         });
-    };
+    }, [JSON.stringify(events)]);
 
     const dateRangeText = useMemo(() => {
         const end = new Date(startOfWeek);

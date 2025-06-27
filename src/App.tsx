@@ -11,7 +11,6 @@ import { useAppSettingStore } from './store';
 
 function App() {
   const { theme : themeType } = useAppSettingStore()
-  
   const theme = colors[themeType || "dark"]
   return (
     <ConfigProvider theme={{ token: { 
@@ -22,12 +21,7 @@ function App() {
     } }}>
       <ThemeProvider {...{ theme }}>
         <NotificationProvider>
-          <AppLayout {...{ 
-              async onCreateEvent(event) {
-                console.log({event})
-                return false
-              }, }}
-            >
+          <AppLayout>
             <CalendarPage/>
           </AppLayout>
         </NotificationProvider>

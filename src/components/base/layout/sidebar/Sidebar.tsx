@@ -20,6 +20,7 @@ const StyledBtn = styled(Button)`
     height: 56px;
     border-radius: 16px;
     border: none;
+    box-shadow: 3px 3px 3px ${({ theme }) => theme.borderLine};
 `
 const StyledCalendar = styled(Calendar)`
     background: transparent;
@@ -29,6 +30,11 @@ const StyledCalendar = styled(Calendar)`
         background: transparent;
     }
     .react-calendar button {
+    }
+    .react-calendar__navigation button, .react-calendar__month-view__weekdays__weekday, .react-calendar__tile {
+        ${({ theme }) => theme.name === "light" && `
+            color: ${theme.text};
+        `};
     }
     .react-calendar__tile--active {
         border-radius: 100px;

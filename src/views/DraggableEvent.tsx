@@ -4,7 +4,7 @@ import { useDrag } from "react-dnd";
 import styled from "styled-components";
 
 const EventItem = styled.div<{ color?: string }>`
-    color: ${({ color }) => color};
+    color: ${({ color, theme }) => color || theme.text};
     border-radius: 4px;
     font-size: 0.75rem;
     cursor: grab;

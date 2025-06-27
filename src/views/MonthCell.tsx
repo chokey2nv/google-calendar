@@ -6,7 +6,7 @@ import type { ICalendarEvent } from '@/utils';
 import { DraggableEvent } from './DraggableEvent';
 
 const CellWrapper = styled.div`
-    border: 1px solid #333537;
+    border: 1px solid ${({ theme }) => theme.borderLine};
     min-height: 100px;
     max-height: 100px;
     display: flex;

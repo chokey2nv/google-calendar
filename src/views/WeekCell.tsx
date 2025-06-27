@@ -13,7 +13,7 @@ type Props = {
 };
 
 const CellWrapper = styled.div`
-  border: 1px solid #333537;
+  border: 1px solid ${({ theme }) => theme.borderLine};
   padding: 0.25rem;
   position: relative;
   min-height: 60px;
