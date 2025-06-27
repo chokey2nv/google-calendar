@@ -5,6 +5,7 @@ interface NewEventStore {
   isModalOpen?: boolean;
   isEdit?: boolean;
   calendarEvent?: ICalendarEvent;
+  unSetCalendarEvent: () => void;
   onCancel?: () => void;
   onSubmit?: (calendarEvent: Partial<ICalendarEvent>) => Promise<void>;
   onOpenModal: (data: {
@@ -17,6 +18,13 @@ interface NewEventStore {
 
 export const useNewEventStore = create<NewEventStore>((set) => ({
   isModalOpen: false,
+  unSetCalendarEvent() {
+    set({
+      isModalOpen: false,
+      isEdit: undefined,
+      calendarEvent: undefined,
+    });
+  },
   onCancel() {
     set({ isModalOpen: false, isEdit: undefined, calendarEvent: undefined})
   },

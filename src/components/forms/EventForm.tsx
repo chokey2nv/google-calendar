@@ -55,7 +55,7 @@ export interface INewEventForm extends Omit<ICalendarEvent, "date"|"endDate"> {
     endMinute: string
 }
 export const NewEventForm = () => {
-    const { isModalOpen, onCancel, onSubmit } = useNewEventStore()
+    const { isModalOpen, onCancel, onSubmit, isEdit, unSetCalendarEvent } = useNewEventStore()
     const formRef = useRef<FormInstance<INewEventForm>>(null)
     const theme = useTheme();
     const onFinish = (form: INewEventForm) => {
@@ -69,6 +69,9 @@ export const NewEventForm = () => {
         onSubmit?.(event).finally(() => {
             onCancel?.()
             formRef.current?.resetFields();
+            if(isEdit){
+                unSetCalendarEvent()
+            }
         });
     };
     return (
