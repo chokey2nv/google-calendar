@@ -1,3 +1,18 @@
+# dependencies
+/web/node_modules
+/web/.env
+/web/tmp
+/web/build
+/web/dist
+/.pnp
+.pnp.js
+
+/backend/tmp
+
+# testing
+/coverage
+
+
 # Logs
 logs
 *.log
