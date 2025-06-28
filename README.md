@@ -3,6 +3,8 @@
 A fully-featured, modern, and testable calendar system built with **React**, **TypeScript**, and **styled-components**. This project supports **monthly**, **weekly**, and **daily** calendar views, complete with **drag-and-drop** and **responsive design**
 
 ---
+## Demo 
+https://drive.google.com/file/d/1wzxUO_Ij1kFbWb4lpshrNEjvkEV3VGYZ/view?usp=sharing 
 
 ## 🚀 App Url 
 [https://google-calendar-423382344094.us-central1.run.app/](https://google-calendar-423382344094.us-central1.run.app/)
@@ -14,7 +16,7 @@ Github: https://github.com/chokey2nv/google-calendar
 
 ```bash
 git clone https://github.com/chokey2nv/google-calendar.git
-cd google-calendar
+cd google-calendar/web
 ```
 
 ### 2. Install Dependencies
@@ -123,10 +125,15 @@ interface ICalendarEvent {
 - [x] Drawer sidebar for mobile
 - [x] Navigation between weeks/months/days
 - [x] Performance optimization with `React.memo` and `useCallback`
-- [x] Event list left pane.
+- [x] Event list on the sidebar to see added and removed events.
+- [x] Events can be edited or deleted from the this list.
 - [x] Create new event.
 - [x] Update event.
 - [x] View event.
 - [x] Delete event.
+- [x] Navigation to next and previous dates in all views (day, week and month)
+- [x] Sidebar calendar to easily move to any date.
+- [x] Dockerized the app and hosted on GCP => https://google-calendar-423382344094.us-central1.run.app/
+
 
 ---
